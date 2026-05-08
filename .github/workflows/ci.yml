@@ -24,3 +24,7 @@ jobs:
     - name: Run tests
       run: |
         pytest backend/tests
+    
+    - name: Run linter
+      run: |
+        ruff check backend
