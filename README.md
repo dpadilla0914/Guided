@@ -14,6 +14,12 @@ Guided is a private RAG-powered learning assistant designed for cohort-based tec
 The system retrieves curriculum content and generates guided, Socratic-style responses without providing direct answers. It also provides administrators with insight into student engagement, struggle patterns, and curriculum gaps through logging and analytics.
 ```
 
+## Pitch Deck
+
+The Hackathon 3 pitch deck can be found in:
+
+`docs/pitch_deck.pdf`
+
 ## Tech Stack
 
 ### Backend
@@ -31,12 +37,17 @@ GPT-4 / Claude API
 
 ### Frontend
 ```
-React / Streamlit
+React
 ```
 
 ### DevOps
 ```
 GitHub Actions
+```
+
+### Deployment
+```
+Blue-Green Deployment Strategy
 ```
 
 ## Setup
