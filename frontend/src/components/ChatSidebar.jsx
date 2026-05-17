@@ -11,29 +11,58 @@ export default function ChatSidebar() {
 
   const [input, setInput] = useState("");
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!input.trim()) return;
+
+    const userText = input;
 
     const newMessage = {
       id: Date.now(),
       sender: "Student",
-      text: input,
+      text: userText,
     };
 
+    // Add user message immediately
     setMessages((prev) => [...prev, newMessage]);
+    setInput("");
 
-    setTimeout(() => {
+    try {
+      const res = await fetch(
+        "https://studious-potato-jj9qg6w4vxpqf5974-8000.app.github.dev/chat",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: userText,
+          }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await res.json();
+
+      const aiMessage = {
+        id: Date.now() + 1,
+        sender: "Course AI",
+        text: data.reply || "No response from server.",
+      };
+
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now() + 1,
           sender: "Course AI",
-          text: "I can help with assignments, quizzes, and modules.",
+          text: "Error: Could not connect to server.",
         },
       ]);
-    }, 500);
-
-    setInput("");
+    }
   };
 
   return (
@@ -77,7 +106,6 @@ export default function ChatSidebar() {
             }}
           >
             <strong>{msg.sender}</strong>
-
             <p>{msg.text}</p>
           </div>
         ))}
@@ -95,21 +123,15 @@ export default function ChatSidebar() {
           type="text"
           value={input}
           placeholder="Message AI..."
-          onChange={(e) =>
-            setInput(e.target.value)
-          }
-          onKeyDown={(e) =>
-            e.key === "Enter" && sendMessage()
-          }
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           style={{
             flex: 1,
             padding: "10px",
           }}
         />
 
-        <button onClick={sendMessage}>
-          Send
-        </button>
+        <button onClick={sendMessage}>Send</button>
       </div>
     </div>
   );
