@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from app.routes import router
 
-from backend.app.guardrails.detector import detect_direct_answer
-from backend.app.guardrails.rewrite import rewrite_response
+from app.guardrails.detector import detect_direct_answer
+from app.guardrails.rewrite import rewrite_response
 
 app = FastAPI()
+app.include_router(router)
 
 
 class ChatRequest(BaseModel):
