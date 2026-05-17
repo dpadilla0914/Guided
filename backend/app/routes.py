@@ -1,8 +1,16 @@
 from fastapi import APIRouter
 from app.retrieval import retrieve
+from app.services.chat_service import process_chat
+
 
 router = APIRouter()
 
+
+@router.post("/chat")
+def chat(payload: dict):
+    message = payload["message"]
+
+    return process_chat(message)
 
 @router.get("/")
 def root():
