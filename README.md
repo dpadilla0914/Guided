@@ -18,7 +18,7 @@ The system retrieves curriculum content and generates guided, Socratic-style res
 
 The Hackathon 3 pitch deck can be found in:
 
-`docs/pitch_deck.pdf`
+![Architecture Diagram](docs/architecture_diagram.png)
 
 ## Tech Stack
 
@@ -31,8 +31,7 @@ FastAPI
 ### Retrieval / AI
 ```
 ChromaDB
-OpenAI Embeddings
-GPT-4 / Claude API
+SentenceTransformers
 ```
 
 ### Frontend
