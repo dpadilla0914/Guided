@@ -1,11 +1,22 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from app.routes import router
 
-from backend.app.guardrails.detector import detect_direct_answer
-from backend.app.guardrails.rewrite import rewrite_response
+from app.guardrails.detector import detect_direct_answer
+from app.guardrails.rewrite import rewrite_response
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(router)
 
 class ChatRequest(BaseModel):
     question: str

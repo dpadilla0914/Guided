@@ -1,4 +1,4 @@
-from backend.app.guardrails.rules import BLOCKED_PATTERNS
+from app.guardrails.rules import BLOCKED_PATTERNS
 
 
 def detect_direct_answer(response: str) -> bool:
