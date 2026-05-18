@@ -1,4 +1,11 @@
 BLOCKED_PATTERNS = [
+    # Input cheating attempts
+    "give me the answer",
+    "solve this for me",
+    "do my homework",
+    "what is the exact answer",
+
+    #Output leakage patterns
     "here is the code",
     "the answer is",
     "use this solution",
