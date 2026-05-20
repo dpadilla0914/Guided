@@ -1,4 +1,5 @@
 import { useState } from "react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ChatSidebar() {
   const [messages, setMessages] = useState([
@@ -28,7 +29,7 @@ export default function ChatSidebar() {
 
     try {
       const res = await fetch(
-        "https://studious-potato-jj9qg6w4vxpqf5974-8000.app.github.dev/chat",
+        API_URL,
         {
           method: "POST",
           headers: {
