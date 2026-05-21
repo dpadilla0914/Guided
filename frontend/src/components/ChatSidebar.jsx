@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 export default function ChatSidebar() {
@@ -23,23 +24,21 @@ export default function ChatSidebar() {
       text: userText,
     };
 
-    // Add user message immediately
+    // Show student message immediately
     setMessages((prev) => [...prev, newMessage]);
+
     setInput("");
 
     try {
-      const res = await fetch(
-        API_URL,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: userText,
-          }),
-        }
-      );
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userText,
+        }),
+      });
 
       if (!res.ok) {
         throw new Error("Network response was not ok");
@@ -47,14 +46,21 @@ export default function ChatSidebar() {
 
       const data = await res.json();
 
+      console.log("Backend response:", data);
+
       const aiMessage = {
         id: Date.now() + 1,
         sender: "Course AI",
-        text: data.reply || "No response from server.",
+      text:
+        data.sources?.join("\n\n") ||
+        data.response ||
+        "No response from server.",
       };
 
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
+      console.error(error);
+
       setMessages((prev) => [
         ...prev,
         {
