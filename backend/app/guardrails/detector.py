@@ -9,3 +9,22 @@ def detect_direct_answer(response: str) -> bool:
             return True
 
     return False
+
+def detect_solution_leak(response: str) -> bool:
+
+    suspicious_patterns = [
+        "```",
+        "def ",
+        "return ",
+        "solution:",
+        "final answer",
+        "exact code",
+        "step-by-step solution",
+    ]
+
+    response_lower = response.lower()
+
+    return any(
+        pattern in response_lower
+        for pattern in suspicious_patterns
+    )
