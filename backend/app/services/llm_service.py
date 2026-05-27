@@ -1,7 +1,15 @@
-import requests
+import os
+
+from openai import OpenAI
+from dotenv import load_dotenv
 
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
+load_dotenv()
+
+client = OpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1",
+)
 
 
 def generate_response(question: str, context: str):
@@ -37,29 +45,27 @@ Instructions:
 - Focus on understanding, not answers
 """
 
-    payload = {
-        "model": "mistral",
-        "prompt": prompt,
-        "stream": False,
-    }
-
     try:
 
-        response = requests.post(
-            OLLAMA_URL,
-            json=payload,
-            timeout=60,
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            temperature=0.7,
         )
 
-        result = response.json()
-
-        return result["response"]
+        return response.choices[0].message.content
 
     except Exception as e:
 
-        print("OLLAMA ERROR:", e)
+        print("GROQ ERROR:", e)
 
         return (
-            "I'm currently unable to reach the language model, "
-            "but I can still help guide you using retrieved concepts."
+            "I'm currently having trouble reaching the "
+            "language model, but I can still help guide "
+            "you using retrieved curriculum concepts."
         )
