@@ -1,9 +1,36 @@
 from pathlib import Path
-
-
 import chromadb
-from sentence_transformers import SentenceTransformer
 
+import os
+import requests
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+HF_TOKEN = os.getenv("HF_TOKEN")
+
+API_URL = (
+    "https://api-inference.huggingface.co/"
+    "pipeline/feature-extraction/"
+    "sentence-transformers/all-MiniLM-L6-v2"
+)
+
+HEADERS = {
+    "Authorization": f"Bearer {HF_TOKEN}"
+}
+
+def get_embedding(text: str):
+
+    response = requests.post(
+        API_URL,
+        headers=HEADERS,
+        json={"inputs": text},
+        timeout=30,
+    )
+
+    return response.json()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_PATH = BASE_DIR / "data" / "raw"
@@ -14,10 +41,6 @@ client = chromadb.PersistentClient(
 
 collection = client.get_or_create_collection(
     name="guided_curriculum"
-)
-
-embedding_model = SentenceTransformer(
-    "sentence-transformers/all-MiniLM-L6-v2"
 )
 
 # Load curriculum files
@@ -63,12 +86,12 @@ def ingest_documents():
         chunks = chunk_text(doc["text"])
 
         for index, chunk in enumerate(chunks):
-            embedding = embedding_model.encode(chunk).tolist()
+            query_embedding = get_embedding(query)
 
             collection.add(
                 ids=[f"{doc['id']}_{index}"],
                 documents=[chunk],
-                embeddings=[embedding],
+                embeddings=[query_embedding],
                 metadatas=[{"source": doc["id"]}],
             )
 
@@ -80,7 +103,7 @@ def ingest_documents():
 # ---------------------------------------------------
 
 def retrieve(query, top_k=3):
-    query_embedding = embedding_model.encode(query).tolist()
+    query_embedding = get_embedding(query)
 
     results = collection.query(
         query_embeddings=[query_embedding],
