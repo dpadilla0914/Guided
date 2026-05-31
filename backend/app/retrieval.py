@@ -9,30 +9,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-HF_TOKEN = os.getenv("HF_TOKEN")
+JINA_API_KEY = os.getenv("JINA_API_KEY")
 
-API_URL = (
-    "https://api-inference.huggingface.co/"
-    "pipeline/feature-extraction/"
-    "sentence-transformers/all-MiniLM-L6-v2"
-)
+API_URL = "https://api.jina.ai/v1/embeddings"
 
 HEADERS = {
-    "Authorization": f"Bearer {HF_TOKEN}"
+    "Authorization": f"Bearer {JINA_API_KEY}",
+    "Content-Type": "application/json",
 }
 
-def get_embedding(text: str):
-
-    response = requests.post(
-        API_URL,
-        headers=HEADERS,
-        json={"inputs": text},
-        timeout=30,
-    )
-
-    return response.json()
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 DATA_PATH = BASE_DIR / "data" / "raw"
 
 client = chromadb.PersistentClient(
@@ -42,6 +29,24 @@ client = chromadb.PersistentClient(
 collection = client.get_or_create_collection(
     name="guided_curriculum"
 )
+
+def get_embedding(text: str):
+
+    response = requests.post(
+        API_URL,
+        headers=HEADERS,
+        json={
+            "input": [text],
+            "model": "jina-embeddings-v2-base-en",
+        },
+        timeout=60,
+    )
+
+    response.raise_for_status()
+
+    data = response.json()
+
+    return data["data"][0]["embedding"]
 
 # Load curriculum files
 # ---------------------------------------------------
@@ -80,13 +85,19 @@ def chunk_text(text, chunk_size=300):
 # ---------------------------------------------------
 
 def ingest_documents():
+
+    existing_count = collection.count()
+
+    if existing_count > 0:
+        print("Documents already ingested.")
+        return
     documents = load_documents()
 
     for doc in documents:
         chunks = chunk_text(doc["text"])
 
         for index, chunk in enumerate(chunks):
-            query_embedding = get_embedding(query)
+            query_embedding = get_embedding(chunk)
 
             collection.add(
                 ids=[f"{doc['id']}_{index}"],
