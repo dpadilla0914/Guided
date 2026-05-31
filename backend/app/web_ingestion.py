@@ -52,7 +52,8 @@ def scrape_page(url: str):
     ]):
         tag.decompose()
 
-    text = soup.get_text(separator="\n")
+    text = soup.get_text(separator="\n", strip=True)
+    text = text.encode("utf-8", errors="ignore").decode("utf-8")
 
     # Clean whitespace
     cleaned = "\n".join(

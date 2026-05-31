@@ -27,11 +27,6 @@ client = chromadb.PersistentClient(
     path=str(BASE_DIR / "chroma_db")
 )
 
-try:
-    client.delete_collection("guided_curriculum")
-except:
-    pass
-
 collection = client.get_or_create_collection(
     name="guided_curriculum"
 )
@@ -77,11 +72,29 @@ def load_documents():
 # Chunking
 # ---------------------------------------------------
 
-def chunk_text(text, chunk_size=300):
+def chunk_text(text, max_chunk_size=1000):
+
+    paragraphs = text.split("\n\n")
+
     chunks = []
 
-    for i in range(0, len(text), chunk_size):
-        chunks.append(text[i : i + chunk_size])
+    for paragraph in paragraphs:
+
+        paragraph = paragraph.strip()
+
+        if not paragraph:
+            continue
+
+        # Split oversized paragraphs
+        if len(paragraph) > max_chunk_size:
+
+            for i in range(0, len(paragraph), max_chunk_size):
+                chunks.append(
+                    paragraph[i:i + max_chunk_size]
+                )
+
+        else:
+            chunks.append(paragraph)
 
     return chunks
 
@@ -105,6 +118,9 @@ def ingest_documents():
         for index, chunk in enumerate(chunks):
             query_embedding = get_embedding(chunk)
 
+            print(f"Adding chunk: {doc['id']}_{index}")
+            print(chunk[:200])
+
             collection.add(
                 ids=[f"{doc['id']}_{index}"],
                 documents=[chunk],
@@ -113,7 +129,7 @@ def ingest_documents():
             )
 
     print("Ingestion complete.")
-
+    print(collection.count())
 
 # ---------------------------------------------------
 # Retrieval
@@ -126,7 +142,7 @@ def retrieve(query, top_k=3):
         query_embeddings=[query_embedding],
         n_results=top_k,
     )
-
+    print(results)
     return results
 
 
