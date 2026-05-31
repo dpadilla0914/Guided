@@ -1,5 +1,4 @@
 from pathlib import Path
-import chromadb
 
 import os
 import requests
@@ -21,14 +20,6 @@ HEADERS = {
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATA_PATH = BASE_DIR / "data" / "raw"
-
-client = chromadb.PersistentClient(
-    path=str(BASE_DIR / "chroma_db")
-)
-
-collection = client.get_or_create_collection(
-    name="guided_curriculum"
-)
 
 def get_embedding(text: str):
 
