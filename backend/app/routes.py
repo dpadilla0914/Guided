@@ -1,6 +1,8 @@
 from fastapi import APIRouter
+
 from app.retrieval import retrieve
 from app.services.chat_service import process_chat
+from app.logging_service import log_interaction, get_logs
 
 
 router = APIRouter()
@@ -10,7 +12,17 @@ router = APIRouter()
 def chat(payload: dict):
     message = payload["message"]
 
-    return process_chat(message)
+    response = process_chat(message)
+
+    system_output = response.get("response", str(response))
+
+    log_interaction(
+        user_input=message,
+        system_output=system_output,
+    )
+
+    return response
+
 
 @router.get("/")
 def root():
@@ -29,4 +41,11 @@ def retrieval_test(query: str):
     return {
         "query": query,
         "results": results["documents"][0],
+    }
+
+
+@router.get("/logs")
+def logs():
+    return {
+        "logs": get_logs()
     }
