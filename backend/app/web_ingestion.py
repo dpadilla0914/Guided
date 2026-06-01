@@ -55,6 +55,15 @@ def scrape_page(url: str):
     text = soup.get_text(separator="\n", strip=True)
     text = text.encode("utf-8", errors="ignore").decode("utf-8")
 
+    lines = text.splitlines()
+
+    cleaned_lines = [
+        line for line in lines
+        if len(line.strip()) > 2
+        ]
+
+    text = "\n".join(cleaned_lines)
+
     # Clean whitespace
     cleaned = "\n".join(
         line.strip()

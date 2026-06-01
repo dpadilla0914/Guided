@@ -118,9 +118,6 @@ def ingest_documents():
         for index, chunk in enumerate(chunks):
             query_embedding = get_embedding(chunk)
 
-            print(f"Adding chunk: {doc['id']}_{index}")
-            print(chunk[:200])
-
             collection.add(
                 ids=[f"{doc['id']}_{index}"],
                 documents=[chunk],
@@ -129,7 +126,6 @@ def ingest_documents():
             )
 
     print("Ingestion complete.")
-    print(collection.count())
 
 # ---------------------------------------------------
 # Retrieval
@@ -142,7 +138,7 @@ def retrieve(query, top_k=3):
         query_embeddings=[query_embedding],
         n_results=top_k,
     )
-    print(results)
+
     return results
 
 
@@ -156,9 +152,3 @@ if __name__ == "__main__":
     query = "How do Python loops work?"
 
     results = retrieve(query)
-
-    print("\nRetrieved Results:\n")
-
-    for item in results["documents"][0]:
-        print(item)
-        print("-" * 50)

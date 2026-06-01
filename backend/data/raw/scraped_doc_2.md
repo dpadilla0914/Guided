@@ -25,8 +25,6 @@ commit
 notes
 restore
 reset
-rm
-mv
 Branching and Merging
 branch
 checkout
@@ -62,7 +60,6 @@ bisect
 blame
 grep
 Email
-am
 apply
 imap-send
 format-patch
@@ -90,7 +87,6 @@ Workflows
 All guides...
 Administration
 clean
-gc
 fsck
 reflog
 filter-branch
@@ -119,7 +115,6 @@ update-ref
 verify-pack
 write-tree
 Latest version
-▾
 git-commit last updated in 2.54.0
 2.54.0
 2026-04-20
@@ -218,99 +213,50 @@ git-commit - Record changes to the repository
 SYNOPSIS
 git
 commit
-[
--a
-|
 --interactive
-|
 --patch
 ] [
--s
 ] [
--v
 ] [
--u
-[
 <mode>
 ]] [
 --amend
-]
-[
 --dry-run
-]
 <commit>
-_
-|
 --fixup
-[(
 amend
-|
 reword
-)
-:
-">
 <commit>
-]
-[
--F
 <file>
-|
--m
 <msg>
 ] [
 --reset-author
 ] [
 --allow-empty
-]
-[
 --allow-empty-message
 ] [
 --no-verify
 ] [
--e
 ] [
 --author=
 <author>
-]
-[
 --date=
 <date>
 ] [
 --cleanup=
 <mode>
 ] [
---
-[
 no-
-]
 status
-]
-[
--i
-|
--o
 ] [
 --pathspec-from-file=
 <file>
-[
 --pathspec-file-nul
-]]
-[(
 --trailer
 <token>
-[(
-=
-|
-:
-)
 <value>
 ])…​] [
--S
-[
 <keyid>
-]]
-[
---
 ] [
 <pathspec>
 …​]
@@ -323,7 +269,6 @@ the working tree, in which case
 HEAD
 is "detached" as described in
 git-checkout[1]
-).
 The content to be committed can be specified in several ways:
 by using
 git-add[1]
@@ -343,14 +288,12 @@ commit
 command
 (without
 --interactive
-or
 --patch
 switch), in which
 case the commit will ignore changes staged in the index, and instead
 record the current content of the listed files (which must already
 be known to Git);
 by using the
--a
 switch with the
 commit
 command to automatically
@@ -360,7 +303,6 @@ that have been removed from the working tree, and then perform the
 actual commit;
 by using the
 --interactive
-or
 --patch
 switches with the
 commit
@@ -379,21 +321,17 @@ If you make a commit and then find a mistake immediately after
 that, you can recover from it with
 git
 reset
-.
 OPTIONS
--a
 --all
 Automatically stage files that have
 been modified and deleted, but new files you have not
 told Git about are not affected.
--p
 --patch
 Use the interactive patch selection interface to choose
 which changes to commit. See
 git-add[1]
 for
 details.
--U
 <n>
 --unified=
 <n>
@@ -404,11 +342,9 @@ lines defaults to
 diff.context
 or 3 if the configuration variable
 is unset. (
--U
 without
 <n>
 is silently accepted as a synonym for
--p
 due to a historical accident).
 --inter-hunk-context=
 <n>
@@ -419,7 +355,6 @@ Defaults to
 diff.interHunkContext
 or 0 if the config option
 is unset.
--C
 <commit>
 --reuse-message=
 <commit>
@@ -428,24 +363,16 @@ Take an existing
 object, and reuse the log message
 and the authorship information (including the timestamp)
 when creating the commit.
--c
 <commit>
 --reedit-message=
 <commit>
 Like
--C
 , but with
--c
 the editor is invoked, so that
 the user can further edit the commit message.
 --fixup=
-[(
 amend
-|
 reword
-)
-:
-]
 <commit>
 Create a new commit which "fixes up"
 <commit>
@@ -475,29 +402,24 @@ replaces the log message of
 with its own log message
 but makes no changes to the content of
 <commit>
-.
 The commit created by plain
 --fixup=
 <commit>
 has a title
 composed of "fixup!" followed by the title of
 <commit>
-,
 and is recognized specially by
 git
 rebase
 --autosquash
 . The
--m
 option may be used to supplement the log message of the created
 commit, but the additional commentary will be thrown away once the
 "fixup!" commit is squashed into
 <commit>
-by
 git
 rebase
 --autosquash
-.
 The commit created by
 --fixup=amend:
 <commit>
@@ -518,7 +440,6 @@ is replaced by the refined log message
 from the "amend!" commit. It is an error for the "amend!" commit’s
 log message to be empty unless
 --allow-empty-message
-is
 specified.
 --fixup=reword:
 <commit>
@@ -540,7 +461,6 @@ when applied by
 git
 rebase
 --autosquash
-.
 See
 git-rebase[1]
 for details.
@@ -550,26 +470,14 @@ Construct a commit message for use with
 git
 rebase
 --autosquash
-.
 The commit message title is taken from the specified
 commit with a prefix of "squash! ".  Can be used with additional
 commit message options (
--m
-/
--c
-/
--C
-/
--F
 ). See
 git-rebase[1]
 for details.
 --reset-author
 When used with
--C
-/
--c
-/
 --amend
 options, or when committing after a
 conflicting cherry-pick, declare that the authorship of the
@@ -580,7 +488,6 @@ When doing a dry-run, give the output in the short-format. See
 git-status[1]
 for details. Implies
 --dry-run
-.
 --branch
 Show the branch and tracking info even in short-format. See
 git-status[1]
@@ -591,47 +498,36 @@ format. See
 git-status[1]
 for details. Implies
 --dry-run
-.
 --long
 When doing a dry-run, give the output in the long-format. This
 is the default output of
 git-status[1]
 . Implies
 --dry-run
-.
--z
 --null
 When showing
 short
-or
 porcelain
 git-status[1]
 output, print the
 filename verbatim and terminate the entries with
 NUL
 , instead of
-LF
-.
 If no format is given, implies the
 --porcelain
 output format.
 Without the
--z
 option, filenames with "unusual" characters are
 quoted as explained for the configuration variable
 core.quotePath
 (see
 git-config[1]
-).
--F
 <file>
 --file=
 <file>
 Take the commit message from
 <file>
 .  Use
--
-to
 read the message from the standard input.
 --author=
 <author>
@@ -645,15 +541,12 @@ commit by that author (i.e.
 git
 rev-list
 --all
--i
 --author=
 <author>
-);
 the commit author is then copied from the first such commit found.
 --date=
 <date>
 Override the author date used in the commit.
--m
 <msg>
 --message=
 <msg>
@@ -661,19 +554,11 @@ Use
 <msg>
 as the commit message.
 If multiple
--m
 options are given, their values are
 concatenated as separate paragraphs.
 The
--m
 option is mutually exclusive with
--c
-,
--C
 , and
--F
-.
--t
 <file>
 --template=
 <file>
@@ -689,11 +574,7 @@ guide participants with some hints on what to write in the message
 in what order.  If the user exits the editor without editing the
 message, the commit is aborted.  This has no effect when a message
 is given by other means, e.g. with the
--m
-or
--F
 options.
--s
 --signoff
 --no-signoff
 Add a
@@ -725,16 +606,9 @@ gitfaq[7]
 for more details.
 --trailer
 <token>
-[(
-=
-|
-:
-)
 <value>
-]
 Specify a (
 <token>
-,
 <value>
 ) pair that should be applied as a
 trailer. (e.g.
@@ -750,12 +624,10 @@ trailer to the commit message.)
 The
 trailer.*
 configuration variables
-(
 git-interpret-trailers[1]
 ) can be used to define if
 a duplicated trailer is omitted, where in the run of trailers
 each trailer would appear, and other details.
--n
 --verify
 --no-verify
 Bypass the
@@ -765,7 +637,6 @@ commit-msg
 hooks.
 See also
 githooks[5]
-.
 --allow-empty
 Usually recording a commit that has the exact same tree as its
 sole parent commit is a mistake, and the command prevents you
@@ -786,15 +657,10 @@ cleaned up before committing.  The
 <mode>
 can be
 strip
-,
 whitespace
-,
 verbatim
-,
 scissors
-or
 default
-.
 strip
 Strip leading and trailing empty lines, trailing whitespace,
 commentary and collapse consecutive empty lines.
@@ -809,11 +675,8 @@ Same as
 whitespace
 except that everything from (and including)
 the line found below is truncated, if the message is to be edited.
-"
-#
 " can be customized with
 core.commentChar
-.
 # ------------------------ >8 ------------------------
 default
 Same as
@@ -821,30 +684,23 @@ strip
 if the message is to be edited.
 Otherwise
 whitespace
-.
 The default can be changed by the
 commit.cleanup
 configuration
 variable (see
 git-config[1]
-).
--e
 --edit
 Let the user further edit the message taken from
 <file>
 with
--F
 <file>
 , command line with
--m
 <message>
 , and
 from
 <commit>
 with
--C
 <commit>
-.
 --no-edit
 Use the selected commit message without launching an editor.
 For example,
@@ -858,19 +714,12 @@ without changing its commit message.
 Replace the tip of the current branch by creating a new
 commit. The recorded tree is prepared as usual (including
 the effect of the
--i
 and
--o
 options and explicit
 pathspec), and the message from the original commit is used
 as the starting point, instead of an empty message, when no
 other message is specified from the command line via options
 such as
--m
-,
--F
-,
--c
 , etc.  The new commit has the same
 parents and author as the current one (the
 --reset-author
@@ -884,18 +733,15 @@ You should understand the implications of rewriting history if you
 amend a commit that has already been published.  (See the "RECOVERING
 FROM UPSTREAM REBASE" section in
 git-rebase[1]
-.)
 --no-post-rewrite
 Bypass the
 post-rewrite
 hook.
--i
 --include
 Before making a commit out of staged contents so far,
 stage the contents of paths given on the command line
 as well.  This is usually not what you want unless you
 are concluding a conflicted merge.
--o
 --only
 Make a commit by taking the updated working tree contents
 of the paths specified on the
@@ -920,14 +766,8 @@ Pass pathspec in
 instead of commandline args. If
 <file>
 is exactly
--
 then standard input is used. Pathspec
 elements are separated by
-LF
-or
-CR
-/
-LF
 . Pathspec elements can be
 quoted as explained for the configuration variable
 core.quotePath
@@ -938,7 +778,6 @@ git-config[1]
 and
 global
 --literal-pathspecs
-.
 --pathspec-file-nul
 Only meaningful with
 --pathspec-from-file
@@ -947,15 +786,9 @@ separated with
 NUL
 character and all other characters are taken
 literally (including newlines and quotes).
--u
-[
 <mode>
-]
 --untracked-files
-[
-=
 <mode>
-]
 Show untracked files.
 The
 <mode>
@@ -963,13 +796,11 @@ parameter is optional (defaults to
 all
 ), and is used to
 specify the handling of untracked files; when
--u
 is not used, the
 default is
 normal
 , i.e. show untracked files and directories.
 The possible options are:
-no
 Show no untracked files
 normal
 Shows untracked files and directories
@@ -981,15 +812,10 @@ are taken as
 normal
 and
 false
-as
-no
-.
 The default can be changed using the
 status.showUntrackedFiles
 configuration variable documented in
 git-config[1]
-.
--v
 --verbose
 Show unified diff between the
 HEAD
@@ -999,18 +825,15 @@ template to help the user describe the commit by reminding
 what changes the commit has.
 Note that this diff output doesn’t have its
 lines prefixed with
-#
 . This diff will not be a part
 of the commit message. See the
 commit.verbose
 configuration
 variable in
 git-config[1]
-.
 If specified twice, show in addition the unified diff between
 what would be committed and the worktree files, i.e. the unstaged
 changes to tracked files.
--q
 --quiet
 Suppress commit summary message.
 --dry-run
@@ -1025,22 +848,15 @@ message template when using an editor to prepare the commit
 message.  Defaults to on, but can be used to override
 configuration variable
 commit.status
-.
 --no-status
 Do not include the output of
 git-status[1]
 in the
 commit message template when using an editor to prepare the
 default commit message.
--S
-[
 <key-id>
-]
 --gpg-sign
-[
-=
 <key-id>
-]
 --no-gpg-sign
 GPG-sign commits. The
 <key-id>
@@ -1054,8 +870,6 @@ commit.gpgSign
 configuration variable, and
 earlier
 --gpg-sign
-.
---
 Do not interpret any more arguments as options.
 <pathspec>
 ...
@@ -1069,7 +883,6 @@ For more details, see the
 pathspec
 entry in
 gitglossary[7]
-.
 EXAMPLES
 When recording your own work, the contents of modified files in
 your working tree are temporarily stored to a staging area
@@ -1083,7 +896,6 @@ git
 restore
 --staged
 <file>
-,
 which effectively reverts
 git
 add
@@ -1110,7 +922,6 @@ git
 add
 and
 git
-rm
 for you.  That is, this example does the same as the earlier
 example if there is no other change in your working tree:
 $ edit hello.c
@@ -1119,25 +930,21 @@ $ git commit -a
 The command
 git
 commit
--a
 first looks at your working tree,
 notices that you have modified
 hello.c
 and removed
 goodbye.c
-,
 and performs necessary
 git
 add
 and
 git
-rm
 for you.
 After staging changes to many files, you can alter the order the
 changes are recorded in, by giving pathnames to
 git
 commit
-.
 When pathnames are given, the command makes a commit that
 only records the changes made to the named paths:
 $ edit hello.c hello.h
@@ -1146,7 +953,6 @@ $ edit Makefile
 $ git commit Makefile
 This makes a commit that records the modification to
 Makefile
-.
 The changes staged for
 hello.c
 and
@@ -1163,7 +969,6 @@ as expected.
 After a merge (initiated by
 git
 merge
-or
 git
 pull
 ) stops
@@ -1177,7 +982,6 @@ and after fixing them manually in your working tree, you would
 stage the result as usual with
 git
 add
-:
 $ git status | grep unmerged
 unmerged: hello.c
 $ edit hello.c
@@ -1185,7 +989,6 @@ $ git add hello.c
 After resolving conflicts and staging the result,
 git
 ls-files
--u
 would stop mentioning the conflicted path.  When you are done,
 run
 git
@@ -1193,7 +996,6 @@ commit
 to finally record the merge:
 $ git commit
 As with the case to record your own changes, you can use
--a
 option to save typing.  One difference is that during a merge
 resolution, you cannot use
 git
@@ -1202,7 +1004,6 @@ with pathnames to
 alter the order the changes are committed, because the merge
 should be recorded as a single commit.  In fact, the command
 refuses to run when given pathnames (but see
--i
 option).
 COMMIT INFORMATION
 Author and committer information is taken from the following environment
@@ -1222,7 +1023,6 @@ that, see the
 credential.username
 variable in
 git-config[1]
-.
 In case (some of) these environment variables are not set, the information
 is taken from the configuration items
 user.name
@@ -1272,35 +1072,28 @@ is the number of seconds since the UNIX epoch.
 is a positive or negative offset from UTC.
 For example CET (which is 1 hour ahead of UTC) is
 +0100
-.
 RFC 2822
 The standard date format as described by RFC 2822, for example
 Thu,
-07
 Apr
 2005
 22:13:13
 +0200
-.
 ISO 8601
 Time and date specified by the ISO 8601 standard, for example
 2005-04-07T22:13:13
 . The parser accepts a space instead of the
-T
 character as well. Fractional parts of a second will be ignored,
 for example
 2005-04-07T22:13:13.019
 will be treated as
 2005-04-07T22:13:13
-.
 Note
 In addition, the date part is accepted in the following formats:
 YYYY.MM.DD
-,
 MM/DD/YYYY
 and
 DD.MM.YYYY
-.
 In addition to recognizing all date formats above, the
 --date
 option
@@ -1327,13 +1120,10 @@ and config files (
 .git/config
 (see
 git-config[1]
-),
 gitignore[5]
-,
 gitattributes[5]
 and
 gitmodules[5]
-).
 Note that Git at the core level treats path names simply as
 sequences of non-NUL bytes, there are no path name encoding
 conversions (except on Mac and Windows). Therefore, using
@@ -1367,13 +1157,11 @@ like a valid UTF-8 string, unless you explicitly say your
 project uses a legacy encoding.  The way to say this is to
 have
 i18n.commitEncoding
-in
 .git/config
 file, like this:
 [i18n]
 commitEncoding = ISO-8859-1
 Commit objects created with the above setting record the value
-of
 i18n.commitEncoding
 in their
 encoding
@@ -1382,10 +1170,8 @@ help other people who look at them later.  Lack of this header
 implies that the commit log message is encoded in UTF-8.
 git
 log
-,
 git
 show
-,
 git
 blame
 and friends look at the
@@ -1394,7 +1180,6 @@ header of a commit object, and try to re-code the
 log message into UTF-8 unless otherwise specified.  You can
 specify the desired output encoding with
 i18n.logOutputEncoding
-in
 .git/config
 file, like this:
 [i18n]
@@ -1434,8 +1219,6 @@ when you always want to keep lines that begin
 with the comment character (
 core.commentChar
 , default
-#
-)
 in your log message, in which case you
 would do
 git
@@ -1456,7 +1239,6 @@ A boolean to enable/disable inclusion of status information in the
 commit message template when using an editor to prepare the commit
 message.  Defaults to
 true
-.
 commit.template
 Specify the pathname of a file to use as the template for
 new commit messages.
@@ -1464,15 +1246,11 @@ commit.verbose
 A boolean or int to specify the level of verbosity with
 git
 commit
-.
 HOOKS
 This command can run
 commit-msg
-,
 prepare-commit-msg
-,
 pre-commit
-,
 post-commit
 and
 post-rewrite
@@ -1483,7 +1261,6 @@ information.
 FILES
 $GIT_DIR/COMMIT_EDITMSG
 This file contains the commit message of a commit in progress.
-If
 git
 commit
 exits due to an error before creating a commit,
@@ -1492,16 +1269,11 @@ an editor session) will be available in this file, but will be
 overwritten by the next invocation of
 git
 commit
-.
 SEE ALSO
 git-add[1]
-,
 git-rm[1]
-,
 git-mv[1]
-,
 git-merge[1]
-,
 git-commit-tree[1]
 GIT
 Part of the
