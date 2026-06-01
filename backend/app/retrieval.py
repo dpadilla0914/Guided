@@ -141,7 +141,6 @@ def retrieve(query, top_k=3):
 
     return results
 
-
 # ---------------------------------------------------
 # Local test
 # ---------------------------------------------------
@@ -149,6 +148,4 @@ def retrieve(query, top_k=3):
 if __name__ == "__main__":
     ingest_documents()
 
-    query = "How do Python loops work?"
-
-    results = retrieve(query)
+    print("\nRetrieved Results:\n")
