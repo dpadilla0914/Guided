@@ -3,7 +3,7 @@
 ## Team Members
 ```
 Dave Padilla
-Raymond Lin testing my branch - Ray
+Raymond Lin
 Tashoy Miller testing my branch - Tashoy
 ```
 
@@ -18,7 +18,7 @@ The system retrieves curriculum content and generates guided, Socratic-style res
 
 The Hackathon 3 pitch deck can be found in:
 
-![Architecture Diagram](docs/architecture_diagram.png)
+`docs/pitch_deck.pdf`
 
 ## Tech Stack
 
@@ -32,11 +32,14 @@ FastAPI
 ```
 ChromaDB
 SentenceTransformers
+Ollama
+Mistral LLM
 ```
 
 ### Frontend
 ```
 React
+Vite
 ```
 
 ### DevOps
