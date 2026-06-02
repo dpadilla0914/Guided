@@ -28,7 +28,7 @@ def health_check():
 
 @router.get("/retrieve")
 def retrieval_test(query: str):
-    results = retrieve(query)
+    retrieve(query)
 
     return {
         "query": query
