@@ -4,9 +4,7 @@ export default function ModuleGroup({
   group,
   setSelectedModule,
 }) {
-  const [open, setOpen] = useState(true);
-
-  if (!group) return null;
+  const [open, setOpen] = useState(false);
 
   return (
     <div
@@ -20,10 +18,17 @@ export default function ModuleGroup({
         onClick={() => setOpen(!open)}
         style={{
           cursor: "pointer",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
           fontWeight: "bold",
         }}
       >
-        {group.title}
+        <span>{group.title}</span>
+
+        <span>
+          {open ? "▼" : "▶"}
+        </span>
       </div>
 
       {open &&

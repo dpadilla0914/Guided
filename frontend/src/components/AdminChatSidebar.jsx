@@ -1,7 +1,4 @@
-const chats=[
-{name:"John Smith",text:"I'm struggling with React state management."},
-{name:"Sarah Johnson",text:"Can you explain API routes?"}
-];
+import { chats } from "../data/conversations";
 
 export default function AdminChatSidebar({setSelectedAdminContent}){
 return (
