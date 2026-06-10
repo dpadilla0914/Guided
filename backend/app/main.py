@@ -55,3 +55,6 @@ def chat(request: ChatRequest):
         "guardrail_triggered": flagged,
         "response": final_response,
     }
+
+
+app.include_router(router)
