@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+backend/data/chat_logs.jsonl
+backend/chroma_db/
