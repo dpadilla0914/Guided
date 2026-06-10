@@ -35,14 +35,14 @@ def health_check():
 
 
 @router.get("/retrieve")
+
 def retrieval_test(query: str):
-    retrieve(query)
+    results = retrieve(query)
 
     return {
         "query": query,
         "results": results["documents"][0],
     }
-
 
 @router.get("/logs")
 def logs():
