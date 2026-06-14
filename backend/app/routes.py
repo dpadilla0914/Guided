@@ -1,16 +1,22 @@
 from fastapi import APIRouter
+from pydantic import BaseModel
 
 from app.retrieval import retrieve
 from app.services.chat_service import process_chat
 from app.logging_service import log_interaction, get_logs
 
 
+class ChatRequest(BaseModel):
+    message: str
+
+
 router = APIRouter()
 
 
 @router.post("/chat")
-def chat(payload: dict):
-    message = payload["message"]
+def chat(payload: ChatRequest):
+
+    message = payload.message
 
     response = process_chat(message)
 
@@ -35,14 +41,15 @@ def health_check():
 
 
 @router.get("/retrieve")
-
 def retrieval_test(query: str):
+
     results = retrieve(query)
 
     return {
         "query": query,
         "results": results["documents"][0],
     }
+
 
 @router.get("/logs")
 def logs():

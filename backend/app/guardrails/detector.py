@@ -13,13 +13,17 @@ def detect_direct_answer(response: str) -> bool:
 def detect_solution_leak(response: str) -> bool:
 
     suspicious_patterns = [
-        "```",
-        "def ",
-        "return ",
-        "solution:",
-        "final answer",
-        "exact code",
-        "step-by-step solution",
+    "def ",
+    "class ",
+    "return ",
+    "print(",
+    "```",
+    "the answer is",
+    "the correct answer is",
+    "here is the code",
+    "copy and paste",
+    "complete solution",
+    "full solution",
     ]
 
     response_lower = response.lower()
