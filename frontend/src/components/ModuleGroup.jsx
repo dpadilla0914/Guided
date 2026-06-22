@@ -1,52 +1,39 @@
 import { useState } from "react";
 
-export default function ModuleGroup({
-  group,
-  setSelectedModule,
-}) {
+export default function ModuleGroup({ group, setSelectedModule }) {
   const [open, setOpen] = useState(false);
+  const progress = group.progress ?? 0;
 
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        marginBottom: "10px",
-        padding: "10px",
-      }}
-    >
-      <div
-        onClick={() => setOpen(!open)}
-        style={{
-          cursor: "pointer",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontWeight: "bold",
-        }}
-      >
-        <span>{group.title}</span>
-
-        <span>
-          {open ? "▼" : "▶"}
-        </span>
+    <div className="module-group">
+      <div className="group-header" onClick={() => setOpen(!open)}>
+        <span className="group-title">{group.title}</span>
+        <span className={`group-caret ${open ? "open" : ""}`}>▶</span>
       </div>
 
-      {open &&
-        group.modules?.map((module) => (
-          <div
-            key={module.id}
-            onClick={() =>
-              setSelectedModule(module)
-            }
-            style={{
-              marginLeft: "20px",
-              marginTop: "10px",
-              cursor: "pointer",
-            }}
-          >
-            {module.title}
-          </div>
-        ))}
+      <div className="progress-track">
+        <div className="progress-fill" style={{ width: `${progress}%` }} />
+      </div>
+      <div className="progress-meta">
+        <span>{progress}% complete</span>
+        {group.completed && <span className="progress-done">✓ Done</span>}
+      </div>
+
+      {open && (
+        <div className="submodules">
+          {group.modules?.map((module) => (
+            <div
+              key={module.id}
+              className="submodule"
+              onClick={() => setSelectedModule(module)}
+            >
+              <span className={`submodule-dot ${module.completed ? "done" : ""}`} />
+              <span className="submodule-title">{module.title}</span>
+              {module.type && <span className="type-chip">{module.type}</span>}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -15,68 +15,54 @@ export default function AdminSidebar({
   };
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-header">
-        <h2>Students</h2>
+    <div className="panel panel-left">
+      <div className="brand">
+        <div className="brand-mark">G</div>
+        <div>
+          <div className="brand-name">Guided</div>
+          <div className="brand-sub">Instructor Console</div>
+        </div>
       </div>
 
-      {students.map((student) => (
-        <div
-          key={student.id}
-          style={{
-            border: "1px solid #ccc",
-            marginBottom: "10px",
-            padding: "10px",
-          }}
-        >
-          <div
-            onClick={() => toggleStudent(student.id)}
-            style={{
-              fontWeight: "bold",
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span>{student.name}</span>
+      <div className="eyebrow">Students</div>
 
-            <span>
-              {openStudents[student.id] ? "▼" : "▶"}
-            </span>
-          </div>
+      <div className="stagger">
+        {students.map((student) => (
+          <div key={student.id} className="student-card">
+            <div className="student-head" onClick={() => toggleStudent(student.id)}>
+              <span className="student-head-left">
+                <span className="avatar">{student.name?.[0] ?? "S"}</span>
+                {student.name}
+              </span>
+              <span className={`group-caret ${openStudents[student.id] ? "open" : ""}`}>▶</span>
+            </div>
 
-          {openStudents[student.id] &&
-            student.weeks.map((week) => (
-              <div
-                key={week.title}
-                onClick={() =>
-                  setSelectedAdminContent({
-                    type: "assignment",
-                    student: student.name,
-                    ...week,
-                  })
-                }
-                style={{
-                  marginLeft: "20px",
-                  marginTop: "10px",
-                  cursor: "pointer",
-                }}
-              >
-                {week.title}
+            {openStudents[student.id] && (
+              <div className="submodules">
+                {student.weeks.map((week) => (
+                  <div
+                    key={week.title}
+                    className="submodule"
+                    onClick={() =>
+                      setSelectedAdminContent({
+                        type: "assignment",
+                        student: student.name,
+                        ...week,
+                      })
+                    }
+                  >
+                    <span className="submodule-dot" />
+                    <span className="submodule-title">{week.title}</span>
+                  </div>
+                ))}
               </div>
-            ))}
-        </div>
-      ))}
+            )}
+          </div>
+        ))}
+      </div>
 
-      <div style={{ marginTop: "20px" }}>
-        <button
-          onClick={() => setAdminView(false)}
-          style={{
-            width: "100%",
-            padding: "12px",
-          }}
-        >
+      <div style={{ marginTop: "18px" }}>
+        <button className="btn btn-full" onClick={() => setAdminView(false)}>
           Return to Student View
         </button>
       </div>
