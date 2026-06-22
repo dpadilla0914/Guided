@@ -73,72 +73,37 @@ export default function ChatSidebar() {
   };
 
   return (
-    <div
-      style={{
-        borderLeft: "1px solid #ccc",
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        background: "white",
-      }}
-    >
-      <div
-        style={{
-          padding: "20px",
-          borderBottom: "1px solid #ddd",
-          fontWeight: "bold",
-        }}
-      >
-        AI Discussion Board
+    <div className="panel panel-right">
+      <div className="chat-header">
+        <div className="chat-orb" />
+        <h3>AI Discussion Board</h3>
       </div>
 
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "20px",
-        }}
-      >
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            style={{
-              background:
-                msg.sender === "Course AI"
-                  ? "#e8f1ff"
-                  : "#f1f1f1",
-              padding: "12px",
-              borderRadius: "10px",
-              marginBottom: "10px",
-            }}
-          >
-            <strong>{msg.sender}</strong>
-            <p>{msg.text}</p>
-          </div>
-        ))}
+      <div className="messages">
+        {messages.map((msg) => {
+          const isAi = msg.sender === "Course AI";
+          return (
+            <div key={msg.id} className={`msg ${isAi ? "msg-ai" : "msg-user"}`}>
+              <span className="msg-sender">
+                {msg.sender}
+                {isAi && <span className="ai-badge">AI</span>}
+              </span>
+              <p>{msg.text}</p>
+            </div>
+          );
+        })}
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          padding: "15px",
-          gap: "10px",
-          borderTop: "1px solid #ddd",
-        }}
-      >
+      <div className="chat-input-bar">
         <input
+          className="chat-input"
           type="text"
           value={input}
-          placeholder="Message AI..."
+          placeholder="Message the assistant…"
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-          style={{
-            flex: 1,
-            padding: "10px",
-          }}
         />
-
-        <button onClick={sendMessage}>Send</button>
+        <button className="chat-send" onClick={sendMessage}>Send</button>
       </div>
     </div>
   );
