@@ -4,4 +4,4 @@
 |-------------|-----------|
 | Dave Padilla | System Architecture & Backend |
 | Raymond Lin | Frontend UI |
-| Tashoy Miller |  |
+| Tashoy Miller | Guardrails, Login, and Auth |

@@ -5,6 +5,12 @@ from app.guardrails.detector import (
 )
 
 from app.services.llm_service import generate_response
+from app.guardrails.intent_classifier import (
+    classify_intent,
+)
+from app.guardrails.struggle_detector import (
+    detect_struggle,
+)
 
 
 def process_chat(message: str):
@@ -67,21 +73,42 @@ def process_chat(message: str):
     )
 
     # LLM GENERATION
+    intent = classify_intent(message)
+
+    struggling = detect_struggle(message)
+
+    topic = None
+
+    metadata = retrieval_results.get("metadatas", [[]])[0]
+
+    if metadata:
+        topic = metadata[0].get("source")
+
     llm_response = generate_response(
         question=message,
         context=context,
+        intent=intent,
+        struggling=struggling,
     )
 
     llm_response = llm_response.strip()
 
     # OUTPUT GUARDRAIL
     if detect_solution_leak(llm_response):
-        llm_response = (
-            "I want to help you reason through the problem "
-            "instead of giving a direct solution.\n\n"
-            "What part feels most confusing right now?"
-        )
+
+        return {
+            "response": (
+                "Let's focus on understanding the concept instead of jumping to a solution. "
+                "What part of the problem feels most confusing right now?"
+            ),
+            "intent": intent,
+            "struggling": struggling,
+            "topic": topic,
+        }
 
     return {
         "response": llm_response,
+        "intent": intent,
+        "struggling": struggling,
+        "topic": topic,
     }

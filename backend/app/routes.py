@@ -20,14 +20,19 @@ def chat(payload: ChatRequest):
 
     response = process_chat(message)
 
-    system_output = response.get("response", str(response))
+    system_output = response.get("response", "")
 
     log_interaction(
         user_input=message,
         system_output=system_output,
+        intent=response.get("intent"),
+        struggling=response.get("struggling"),
+        topic=response.get("topic"),
     )
 
-    return response
+    return {
+        "response": response.get("response")
+    }
 
 
 @router.get("/")

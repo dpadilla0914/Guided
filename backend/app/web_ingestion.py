@@ -95,10 +95,13 @@ def save_scraped_docs():
 
             text = scrape_page(url)
 
-            file_path = (
-                DATA_PATH /
-                f"scraped_doc_{index}.md"
-            )
+            filename_map = {
+                0: "python_control_flow.md",
+                1: "fastapi_tutorial.md",
+                2: "git_commit.md",
+            }
+
+            file_path = DATA_PATH / filename_map[index]
 
             file_path.write_text(
                 text,

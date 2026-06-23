@@ -1,11 +1,12 @@
 from app.guardrails.rules import BLOCKED_PATTERNS
 
 
-def detect_direct_answer(response: str) -> bool:
-    response_lower = response.lower()
+def detect_direct_answer(message: str) -> bool:
+    
+    message = message.lower().strip()
 
     for pattern in BLOCKED_PATTERNS:
-        if pattern in response_lower:
+        if pattern in message:
             return True
 
     return False
@@ -18,13 +19,26 @@ def detect_solution_leak(response: str) -> bool:
     "return ",
     "print(",
     "```",
+
+    # Answer leakage
     "the answer is",
     "the correct answer is",
     "here is the code",
     "copy and paste",
+
+    # Solution leakage
     "complete solution",
     "full solution",
-    ]
+    "working solution",
+    "final solution",
+
+    # Implementation leakage
+    "final code",
+    "completed code",
+    "completed function",
+    "full implementation",
+    "completed implementation",
+]
 
     response_lower = response.lower()
 
