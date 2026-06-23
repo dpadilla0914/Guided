@@ -13,7 +13,8 @@ export default function App() {
   const [selectedAdminContent, setSelectedAdminContent] = useState(null);
 
   return (
-    <div style={{display:"grid",gridTemplateColumns:"320px 1fr 350px",height:"100vh"}}>
+    <div className="app-shell">
+      <div className="aurora" aria-hidden="true" />
       {adminView ? (
         <AdminSidebar setAdminView={setAdminView} setSelectedAdminContent={setSelectedAdminContent} />
       ) : (

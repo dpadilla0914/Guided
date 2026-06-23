@@ -98,6 +98,13 @@ http://localhost:5173
 
 ---
 
+# Start tunnel-deployment,
+
+C:\Users\BOSSE\source\repos\Guided\ngrok-v3-stable-windows-amd64.\ngrok.exe http 5173
+
+Go to website (it may change):
+https://nearest-uncross-verify.ngrok-free.dev/
+
 # Build for Production
 
 ```bash
