@@ -36,6 +36,7 @@ export default function ChatSidebar() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          student_id: "student_1",
           message: userText,
         }),
       });
