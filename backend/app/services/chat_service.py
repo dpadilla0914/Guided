@@ -58,6 +58,12 @@ def process_chat(message: str, student_id: str,):
     
     # LIMIT CONTEXT
     documents = retrieval_results.get("documents", [[]])[0]
+    metadata = retrieval_results.get("metadatas", [[]])[0]
+
+    topic = None
+
+    if metadata:
+        topic = metadata[0].get("source")
 
     if not documents:
 
@@ -68,25 +74,18 @@ def process_chat(message: str, student_id: str,):
                 "Could you rephrase the question or be more specific?"
             )
         }
-    top_chunks = documents[:2]
+
+    top_chunks = documents[:1]
 
     context = "\n\n".join(
-    chunk[:150]
-    for chunk in top_chunks
-
+        chunk[:150]
+        for chunk in top_chunks
     )
 
     # LLM GENERATION
     intent = classify_intent(message)
 
     struggling = detect_struggle(message)
-
-    topic = None
-
-    metadata = retrieval_results.get("metadatas", [[]])[0]
-
-    if metadata:
-        topic = metadata[0].get("source")
         
     profile = load_profile(student_id)
 
@@ -106,10 +105,10 @@ def process_chat(message: str, student_id: str,):
     llm_response = llm_response.strip()
 
     add_message(
-    student_id,
-    "user",
-    message,
-)
+        student_id,
+        "user",
+        message,
+    )
 
     add_message(
         student_id,
@@ -120,11 +119,19 @@ def process_chat(message: str, student_id: str,):
     # OUTPUT GUARDRAIL
     if detect_solution_leak(llm_response):
 
+        guardrail_response = (
+            "Let's focus on understanding the concept instead of jumping to a solution. "
+            "What part of the problem feels most confusing right now?"
+        )
+
+        add_message(
+            student_id,
+            "assistant",
+            guardrail_response,
+        )
+
         return {
-            "response": (
-                "Let's focus on understanding the concept instead of jumping to a solution. "
-                "What part of the problem feels most confusing right now?"
-            ),
+            "response": guardrail_response,
             "intent": intent,
             "struggling": struggling,
             "topic": topic,

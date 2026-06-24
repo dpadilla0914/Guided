@@ -56,6 +56,10 @@ def load_documents():
     documents = []
 
     for file_path in DATA_PATH.glob("*.md"):
+
+        if file_path.stem.startswith("scraped_doc"):
+            continue
+        
         text = file_path.read_text(encoding="utf-8")
 
         documents.append(
