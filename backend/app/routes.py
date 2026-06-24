@@ -7,6 +7,7 @@ from app.logging_service import log_interaction, get_logs
 
 
 class ChatRequest(BaseModel):
+    student_id: str
     message: str
 
 
@@ -18,7 +19,10 @@ def chat(payload: ChatRequest):
 
     message = payload.message
 
-    response = process_chat(message)
+    response = process_chat(
+        message=message,
+        student_id=payload.student_id,
+    )
 
     system_output = response.get("response", "")
 

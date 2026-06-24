@@ -3,7 +3,11 @@ from app.guardrails.detector import (
     detect_direct_answer,
     detect_solution_leak,
 )
-
+from app.services.profile_service import (
+    add_message,
+    get_recent_history,
+    load_profile,
+)
 from app.services.llm_service import generate_response
 from app.guardrails.intent_classifier import (
     classify_intent,
@@ -13,7 +17,7 @@ from app.guardrails.struggle_detector import (
 )
 
 
-def process_chat(message: str):
+def process_chat(message: str, student_id: str,):
 
     # INPUT GUARDRAIL
     if detect_direct_answer(message):
@@ -83,15 +87,35 @@ def process_chat(message: str):
 
     if metadata:
         topic = metadata[0].get("source")
+        
+    profile = load_profile(student_id)
+
+    history = get_recent_history(
+        student_id=student_id,
+    )
 
     llm_response = generate_response(
         question=message,
         context=context,
         intent=intent,
         struggling=struggling,
+        history=history,
+        profile=profile,
     )
 
     llm_response = llm_response.strip()
+
+    add_message(
+    student_id,
+    "user",
+    message,
+)
+
+    add_message(
+        student_id,
+        "assistant",
+        llm_response,
+    )
 
     # OUTPUT GUARDRAIL
     if detect_solution_leak(llm_response):

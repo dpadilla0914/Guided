@@ -12,7 +12,7 @@ client = OpenAI(
 )
 
 
-def generate_response(question: str, context: str, intent: str, struggling: bool):
+def generate_response(question: str, context: str, intent: str, struggling: bool, history: list, profile: dict,):
 
     tutoring_mode = "standard"
 
@@ -62,6 +62,22 @@ def generate_response(question: str, context: str, intent: str, struggling: bool
     - Do NOT use bullet points.
     - Do NOT use numbered lists.
     - Respond as a tutor speaking directly to a student.
+
+    FINAL RESPONSE REQUIREMENTS:
+
+    - Never use markdown.
+    - Never use headings.
+    - Never use bold text.
+    - Never start with titles like:
+        "Explaining X"
+        "Understanding X"
+        "Let's break this down"
+    - Maximum 3 sentences.
+    - Maximum 80 words.
+    - Explain one idea.
+    - Give one hint.
+    - Ask one question.
+    - Stop immediately after the question.
     """
 
     if tutoring_mode == "supportive":
@@ -105,27 +121,41 @@ def generate_response(question: str, context: str, intent: str, struggling: bool
         Ask one question about the next step.
         """
 
+
+    formatted_history = "\n".join(
+        f"{msg['role']}: {msg['content']}"
+        for msg in history
+    )
+
     try:
 
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[
                 {
-                "role": "system",
-                "content": system_prompt,
-                },
-            {
-            "role": "user",
-            "content": f"""
-            Curriculum Context:
-            {context}
+                    "role": "user",
+                    "content": f"""
+                Curriculum Context:
+                {context}
 
-            Student Question:
-            {question}
+                Recent Conversation:
+                {formatted_history}
 
-            Guided Tutor Response:
-            """
-            }
+                Known Strengths:
+                {profile["strengths"]}
+
+                Known Struggles:
+                {profile["struggles"]}
+
+                Support Level:
+                {profile["support_level"]}
+
+                Student Question:
+                {question}
+
+                Guided Tutor Response:
+                """
+                }
             ],
             temperature=0.4,
             max_tokens=100,
